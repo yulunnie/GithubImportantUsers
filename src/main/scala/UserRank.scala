@@ -2,12 +2,12 @@ import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 import org.apache.log4j.LogManager
 
 /**
- * A UserRank use page rank algorithm to compute the attention of a github user
+ * A UserRank use rank algorithm to compute the attention of a github user
  */
 object UserRank {
 
   def main(args: Array[String]) {
-    // initiail the logger
+    // initial the logger
     val logger: org.apache.log4j.Logger = LogManager.getRootLogger
 
     // checking arguments
@@ -21,7 +21,7 @@ object UserRank {
     // parameter setting
     val dummy = -2        // a dummy to store leak values due to dangling nodes
     val root = -1         // a root node connect to all front node
-    val max = 37700        // max node id to process, test use
+    val max = 37700       // max node id to process, test use
     val initialRank = 1f  // initial UserRank
     val alpha = 0.15      // alpha value for random jump
     val iterations = 1    // total iteration times
@@ -68,10 +68,7 @@ object UserRank {
       ranks = ranks.union(sc.parallelize(List((root, 0f))))
     }
 
-    logger.info(ranks.toDebugString)
-
     // output
-    //ranks.repartition(1).saveAsTextFile(args(1))
     ranks.filter{ case(id, rank) => rank > 5 }.repartition(1).saveAsTextFile(args(1))
   }
 }
