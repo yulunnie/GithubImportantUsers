@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/GithubImportantUsers.iml" filepath="$PROJECT_DIR$/.idea/GithubImportantUsers.iml" />
       <module fileurl="file://$PROJECT_DIR$/UserRank.iml" filepath="$PROJECT_DIR$/UserRank.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hw4-PageRank-Spark.iml" filepath="$PROJECT_DIR$/hw4-PageRank-Spark.iml" />
     </modules>
   </component>
 </project>
