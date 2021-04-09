@@ -37,8 +37,8 @@ object UserRank {
       .map( id => (root, id.toInt) )
 
     // load edges
-    val edges = sc.textFile("input/edges.csv")
-      .map( line => line.split(",") )
+    val edgesFile = sc.textFile("input/edges.csv")
+    val edges = edgesFile.map( line => line.split(",") )
       .map( fromTo => (fromTo(0).toInt, fromTo(1).toInt) )
       .filter{ case (from, to) => from < max && to < max }
 
