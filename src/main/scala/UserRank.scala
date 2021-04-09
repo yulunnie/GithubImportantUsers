@@ -27,25 +27,23 @@ object UserRank {
     val iterations = 1    // total iteration times
 
     // create (dangling, dummy)
-    val danglingToDummy = sc.textFile("input/danglings.csv")
+    val danglingToDummy = sc.textFile(args(0) + "/danglings.csv")
       .filter( id => id.toInt < max )
       .map( id => (id.toInt, dummy) )
 
     // create (root, front)
-    val rootToFront = sc.textFile("input/fronts.csv")
+    val rootToFront = sc.textFile(args(0) + "/fronts.csv")
       .filter( id => id.toInt < max )
       .map( id => (root, id.toInt) )
 
     // load edges
-    val edgesFile = sc.textFile("input/edges.csv")
-    /*
+    val edgesFile = sc.textFile(args(0) + "/edges.csv")
     val edges = edgesFile.map( line => line.split(",") )
       .map( fromTo => (fromTo(0).toInt, fromTo(1).toInt) )
-      .filter{ case (from, to) => from < max && to < max } */
+      .filter{ case (from, to) => from < max && to < max }
 
     // create the complete graph
-    val graph = danglingToDummy.union(rootToFront)
-    //val graph = edges.union(danglingToDummy).union(rootToFront)
+    val graph = edges.union(danglingToDummy).union(rootToFront)
 
     // create rank table
     var ranksList : List[(Int,Float)] = List()
