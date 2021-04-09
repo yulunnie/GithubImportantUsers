@@ -2,7 +2,7 @@ import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 import org.apache.log4j.LogManager
 
 /**
- * A spark program to perform pageRank algorithm
+ * A UserRank use page rank algorithm to compute the attention of a github user
  */
 object UserRank {
 
@@ -12,19 +12,19 @@ object UserRank {
 
     // checking arguments
     if (args.length != 2) {
-      logger.error("Usage:\nPageRank <input dir> <output dir>")
+      logger.error("Usage:\n<input dir> <output dir>")
       System.exit(1)
     }
-    val conf = new SparkConf().setAppName("PageRank")//.setMaster("local[4]")
+    val conf = new SparkConf().setAppName("UserRank")//.setMaster("local[4]")
     val sc = new SparkContext(conf)
 
     // parameter setting
-    val dummy = 0
-    val root = -1  // a root node connect to all front node of a chain
-    val k = 10
-    val initialPageRank = 1f / (k*k)
-    val alpha = 0.15
-    val iterations = 10
+    val dummy = 0         // a dummy to store leak values due to dangling nodes
+    val root = -1         // a root node connect to all front node
+    val k = 10            // max node id to process, test use
+    val initialRank = 1f  // initial UserRank
+    val alpha = 0.15      // alpha value for random jump
+    val iterations = 2    // total iteration times
 
     // create synthetic graph
     var edges : List[(Int, Int)] = List()
@@ -48,7 +48,7 @@ object UserRank {
     pageRanks = pageRanks :+ (root, 0f)
     for (i <- 1 to k*k) {
       // page rank of all real node is 1/k*k
-      pageRanks = pageRanks :+ (i, initialPageRank)
+      pageRanks = pageRanks :+ (i, initialRank)
     }
     var ranks = sc.parallelize(pageRanks, 20).partitionBy(new HashPartitioner(100))
 
