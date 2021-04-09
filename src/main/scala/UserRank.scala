@@ -21,7 +21,7 @@ object UserRank {
     // parameter setting
     val dummy = -2        // a dummy to store leak values due to dangling nodes
     val root = -1         // a root node connect to all front node
-    val max = 100        // max node id to process, test use
+    val max = 37700        // max node id to process, test use
     val initialRank = 1f  // initial UserRank
     val alpha = 0.15      // alpha value for random jump
     val iterations = 1    // total iteration times
@@ -38,7 +38,7 @@ object UserRank {
 
     // load edges
     val edges = sc.textFile("input/musae_git_edges.csv")
-      .map( line => line.split(","))
+      .map( line => line.split(",") )
       .map( fromTo => (fromTo(0).toInt, fromTo(1).toInt) )
       .filter{ case (from, to) => from < max && to < max }
 
@@ -72,6 +72,6 @@ object UserRank {
 
     // output
     //ranks.repartition(1).saveAsTextFile(args(1))
-    ranks.filter{case (p, pr) => p < 20}.repartition(1).saveAsTextFile(args(1))
+    ranks.filter{ case(id, rank) => rank > 5 }.repartition(1).saveAsTextFile(args(1))
   }
 }
