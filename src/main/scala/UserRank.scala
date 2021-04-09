@@ -26,19 +26,18 @@ object UserRank {
     val alpha = 0.15      // alpha value for random jump
     val iterations = 2    // total iteration times
 
-    // create synthetic graph
-    var edges : List[(Int, Int)] = List()
-    for (i <- 0 until k) {
-      val offset = i * k
-      // add edge (root, front)
-      edges = edges :+ (root,offset+1)
-      for (j <- 1 until k) {
-        // append real edges
-        edges = edges :+ (offset+j,offset+j+1)
-      }
-      // append (dangling, dummy)
-      edges = edges :+ ((i+1) * k,dummy)
-    }
+    // create (dangling, dummy)
+    val danglingToDummy = sc.textFile("input/danglings.csv")
+      .map( id => (id.toInt, dummy) )
+    // create (root, front)
+    val rootToFront = sc.textFile("input/fronts.csv")
+      .map( id => (root, id.toInt) )
+
+    // load edges
+    val edges = sc.textFile("input/musae_git_edges.csv")
+      .map( line => line.split(","))
+      .map( fromTo => (fromTo(0).toInt, fromTo(1).toInt) )
+
     val graph = sc.parallelize(edges, 20).partitionBy(new HashPartitioner(100))
 
     // create page rank table
